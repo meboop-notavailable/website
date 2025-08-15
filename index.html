@@ -50,15 +50,27 @@
         </h1>
         
         <!-- Main button that triggers the action -->
-        <button id="main-button"
-                class="bg-blue-600 text-white font-bold py-3 px-8 rounded-xl
-                       shadow-lg hover:shadow-xl
-                       transition-all duration-300 transform
-                       hover:scale-110
-                       focus:outline-none focus:ring-4 focus:ring-blue-300
-                       active:scale-95 text-center">
-            Click to Show Menu
-        </button>
+        <div class="flex gap-4">
+            <button id="main-button"
+                    class="bg-blue-600 text-white font-bold py-3 px-8 rounded-xl
+                           shadow-lg hover:shadow-xl
+                           transition-all duration-300 transform
+                           hover:scale-110
+                           focus:outline-none focus:ring-4 focus:ring-blue-300
+                           active:scale-95 text-center">
+                Click to Show Menu
+            </button>
+            <button id="music-button"
+                    class="bg-gray-700 text-white font-bold py-3 px-8 rounded-xl
+                           shadow-lg hover:shadow-xl
+                           transition-all duration-300 transform
+                           hover:scale-110
+                           focus:outline-none focus:ring-4 focus:ring-gray-300
+                           active:scale-95 text-center">
+                Play Music ⏯️
+            </button>
+        </div>
+
 
         <!-- Container for the 5 buttons, now arranged side-by-side -->
         <div id="sub-buttons-container"
@@ -116,6 +128,7 @@
         // Get references to the main button and the container for the sub-buttons
         const mainButton = document.getElementById('main-button');
         const subButtonsContainer = document.getElementById('sub-buttons-container');
+        const musicButton = document.getElementById('music-button');
 
         // Add a click event listener to the main button
         mainButton.addEventListener('click', () => {
@@ -127,6 +140,7 @@
 
         // A variable to hold the YouTube player object
         let player;
+        let isMusicPlaying = false;
         
         // This function is automatically called when the YouTube IFrame Player API script has loaded.
         function onYouTubeIframeAPIReady() {
@@ -134,13 +148,13 @@
             player = new YT.Player('player', {
                 height: '0', // Set height to 0 to make the player invisible
                 width: '0',  // Set width to 0 to make the player invisible
-                videoId: 'RLYksQvr5zY', // This is the ID for a royalty-free music video.
+                videoId: 'sO2L1L9W6Vw', // This is the ID for a royalty-free music video.
                 playerVars: {
-                    'autoplay': 1,      // Autoplay the video
+                    'autoplay': 0,      // Autoplay is off to comply with browser policies
                     'controls': 0,      // Hide player controls
                     'disablekb': 1,     // Disable keyboard controls
-                    'loop': 0,          // Loop the video (requires playlist)
-                    'playlist': '' // The loop parameter only works with a playlist.
+                    'loop': 1,          // Loop the video (requires playlist)
+                    'playlist': 'sO2L1L9W6Vw' // The loop parameter only works with a playlist.
                 },
                 events: {
                     'onReady': onPlayerReady
@@ -150,10 +164,18 @@
         
         // This function is called once the player has loaded and is ready to play.
         function onPlayerReady(event) {
-            // Mute the video initially and then play it to avoid browser autoplay restrictions
-            // on mobile devices, which often require a user interaction to play sound.
-            // For now, we will simply play the video.
-            event.target.playVideo();
+            // Now that the player is ready, we can add a listener to the music button.
+            // The music won't play until the user clicks the button.
+            musicButton.addEventListener('click', () => {
+                if (isMusicPlaying) {
+                    event.target.pauseVideo();
+                    musicButton.textContent = 'Play Music ⏯️';
+                } else {
+                    event.target.playVideo();
+                    musicButton.textContent = 'Pause Music ⏸️';
+                }
+                isMusicPlaying = !isMusicPlaying;
+            });
         }
     </script>
 </body>

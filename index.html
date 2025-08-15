@@ -69,6 +69,34 @@
             opacity: 1;
             max-height: 50px;
         }
+        
+        /* CSS for the new play button tray */
+        .hidden-play-tray {
+            opacity: 0;
+            transform: translateY(-20px); /* Moves the tray up, hiding it */
+            transition: all 0.3s ease-in-out;
+            pointer-events: none; /* Disables interaction when hidden */
+        }
+        
+        .active-play-tray {
+            opacity: 100;
+            transform: translateY(0); /* Slides the tray down to its normal position */
+            pointer-events: auto; /* Enables interaction when active */
+        }
+
+        /* CSS for the new album art tray that slides from the right */
+        .hidden-album-tray {
+            opacity: 0;
+            transform: translateX(100%); /* Moves the tray off-screen to the right */
+            transition: all 0.3s ease-in-out;
+            pointer-events: none; /* Disables interaction when hidden */
+        }
+        
+        .active-album-tray {
+            opacity: 100;
+            transform: translateX(0); /* Slides the tray to its normal position */
+            pointer-events: auto; /* Enables interaction when active */
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -108,6 +136,26 @@
                 <!-- Volume slider that appears on hover -->
                 <div class="absolute bottom-full mb-2 slider-wrapper">
                     <input type="range" id="volume-slider" min="0" max="100" value="50" class="w-32 h-1 bg-gray-300 rounded-lg appearance-none cursor-pointer">
+                </div>
+                
+                <!-- Play/Pause button tray that slides out from the bottom -->
+                <div id="play-tray" class="absolute top-full flex flex-col items-center p-1.5 bg-gray-700 text-white rounded-xl shadow-lg hidden-play-tray overflow-hidden">
+                    <button id="play-pause-button" class="py-1.5 px-3 text-sm rounded-lg hover:bg-gray-600 transition-colors">
+                        &#9658; <!-- Play icon -->
+                    </button>
+                </div>
+
+                <!-- Album art tray that slides out from the right -->
+                <div id="album-tray" class="absolute left-full ml-2 flex flex-col p-2 bg-gray-700 text-white rounded-xl shadow-lg hidden-album-tray overflow-hidden">
+                    <button class="album-art-button p-1.5 text-sm rounded-lg hover:bg-gray-600 transition-colors" data-src="audio/bg-music.mp3">
+                        <img src="https://i1.sndcdn.com/artworks-sTntRmSgZTgc-0-t500x500.jpg" alt="flashing lights" class="rounded-md">
+                    </button>
+                    <button class="album-art-button p-1.5 text-sm rounded-lg hover:bg-gray-600 transition-colors" data-src="audio/upbeat.mp3">
+                        <img src="https://placehold.co/60x60/34D399/FFFFFF?text=Album+2" alt="Album Cover 2" class="rounded-md">
+                    </button>
+                    <button class="album-art-button p-1.5 text-sm rounded-lg hover:bg-gray-600 transition-colors" data-src="audio/relaxing.mp3">
+                        <img src="https://placehold.co/60x60/FCD34D/FFFFFF?text=Album+3" alt="Album Cover 3" class="rounded-md">
+                    </button>
                 </div>
             </div>
         </div>
@@ -162,7 +210,8 @@
     </div>
     
     <!-- Audio element for playing local music -->
-    <audio id="my-audio" src="audio/bg-music.mp3" loop></audio>
+    <!-- The autoplay attribute will attempt to start the music automatically. -->
+    <audio id="my-audio" src="audio/bg-music.mp3" loop autoplay></audio>
 
     <script>
         // Get references to the main button and the container for the sub-buttons
@@ -171,7 +220,11 @@
         const speakerButton = document.getElementById('speaker-button');
         const volumeSlider = document.getElementById('volume-slider');
         const myAudio = document.getElementById('my-audio');
-
+        const playTray = document.getElementById('play-tray');
+        const playPauseButton = document.getElementById('play-pause-button');
+        const albumTray = document.getElementById('album-tray');
+        const albumArtButtons = document.querySelectorAll('.album-art-button');
+        
         // Add a click event listener to the main button
         mainButton.addEventListener('click', () => {
             // Toggle the 'active-menu' class on the container to trigger the animation
@@ -179,21 +232,41 @@
         });
         
         // ---- Audio Control Integration ----
-
-        // Add a listener to the speaker button
+        
+        // Add a listener to the speaker button to toggle both trays at the same time
         speakerButton.addEventListener('click', () => {
-            // Check if the audio is paused
-            if (myAudio.paused) {
-                myAudio.play();
-            } else {
-                myAudio.pause();
-            }
+            playTray.classList.toggle('active-play-tray');
+            albumTray.classList.toggle('active-album-tray');
         });
 
         // Add a listener to the volume slider to control the volume
         volumeSlider.addEventListener('input', (e) => {
             // Set the audio volume based on the slider value (scaled from 0-100 to 0.0-1.0)
             myAudio.volume = e.target.value / 100;
+        });
+
+        // Add a listener to the play/pause button
+        playPauseButton.addEventListener('click', () => {
+            if (myAudio.paused) {
+                myAudio.play();
+                playPauseButton.innerHTML = '&#10074;&#10074;'; // Pause icon
+            } else {
+                myAudio.pause();
+                playPauseButton.innerHTML = '&#9658;'; // Play icon
+            }
+        });
+
+        // Add a click listener to each album art button
+        albumArtButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Get the song URL from the data attribute
+                const newSrc = button.getAttribute('data-src');
+                // Change the audio source and play the new song
+                myAudio.src = newSrc;
+                myAudio.play();
+                // Update the play/pause button icon to 'pause'
+                playPauseButton.innerHTML = '&#10074;&#10074;';
+            });
         });
 
         // Set initial volume to 50%

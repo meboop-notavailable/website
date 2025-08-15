@@ -49,7 +49,7 @@
             Welcome
         </h1>
         
-        <!-- Main button that triggers the action -->
+        <!-- Main button and music button -->
         <div class="flex gap-4">
             <button id="main-button"
                     class="bg-blue-600 text-white font-bold py-3 px-8 rounded-xl
@@ -78,46 +78,46 @@
                     hidden-menu transition-all duration-500 ease-in-out">
 
             <!-- The five dynamically appearing buttons, now with the same styling as the main button -->
-            <button class="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl
+            <a href="page1.html" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl
                            shadow-lg hover:shadow-xl
                            transition-all duration-300 transform
                            hover:scale-110
                            focus:outline-none focus:ring-4 focus:ring-blue-300
                            active:scale-95 text-center">
                 App 1
-            </button>
-            <button class="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl
+            </a>
+            <a href="page2.html" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl
                            shadow-lg hover:shadow-xl
                            transition-all duration-300 transform
                            hover:scale-110
                            focus:outline-none focus:ring-4 focus:ring-blue-300
                            active:scale-95 text-center">
                 App 2
-            </button>
-            <button class="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl
+            </a>
+            <a href="page3.html" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl
                            shadow-lg hover:shadow-xl
                            transition-all duration-300 transform
                            hover:scale-110
                            focus:outline-none focus:ring-4 focus:ring-blue-300
                            active:scale-95 text-center">
                 App 3
-            </button>
-            <button class="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl
+            </a>
+            <a href="page4.html" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl
                            shadow-lg hover:shadow-xl
                            transition-all duration-300 transform
                            hover:scale-110
                            focus:outline-none focus:ring-4 focus:ring-blue-300
                            active:scale-95 text-center">
                 App 4
-            </button>
-            <button class="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl
+            </a>
+            <a href="page5.html" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl
                            shadow-lg hover:shadow-xl
                            transition-all duration-300 transform
                            hover:scale-110
                            focus:outline-none focus:ring-4 focus:ring-blue-300
                            active:scale-95 text-center">
                 App 5
-            </button>
+            </a>
         </div>
     </div>
     
@@ -148,13 +148,13 @@
             player = new YT.Player('player', {
                 height: '0', // Set height to 0 to make the player invisible
                 width: '0',  // Set width to 0 to make the player invisible
-                videoId: 'RLYksQvr5zY', // This is the ID for a royalty-free music video.
+                videoId: 'sO2L1L9W6Vw', // This is the ID for a royalty-free music video.
                 playerVars: {
                     'autoplay': 0,      // Autoplay is off to comply with browser policies
                     'controls': 0,      // Hide player controls
                     'disablekb': 1,     // Disable keyboard controls
-                    'loop': 0,          // Loop the video (requires playlist)
-                    'playlist': 'RLYksQvr5zY' // The loop parameter only works with a playlist.
+                    'loop': 1,          // Loop the video (requires playlist)
+                    'playlist': 'sO2L1L9W6Vw' // The loop parameter only works with a playlist.
                 },
                 events: {
                     'onReady': onPlayerReady

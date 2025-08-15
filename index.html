@@ -8,8 +8,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Using the Inter font from Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-    <!-- YouTube IFrame Player API Script -->
-    <script src="https://www.youtube.com/iframe_api"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -163,8 +161,8 @@
         </div>
     </div>
     
-    <!-- This div will contain the hidden YouTube player -->
-    <div id="player"></div>
+    <!-- Audio element for playing local music -->
+    <audio id="my-audio" src="audio/bg-music.mp3" loop></audio>
 
     <script>
         // Get references to the main button and the container for the sub-buttons
@@ -172,6 +170,7 @@
         const subButtonsContainer = document.getElementById('sub-buttons-container');
         const speakerButton = document.getElementById('speaker-button');
         const volumeSlider = document.getElementById('volume-slider');
+        const myAudio = document.getElementById('my-audio');
 
         // Add a click event listener to the main button
         mainButton.addEventListener('click', () => {
@@ -179,54 +178,27 @@
             subButtonsContainer.classList.toggle('active-menu');
         });
         
-        // ---- YouTube Player API Integration ----
+        // ---- Audio Control Integration ----
 
-        // A variable to hold the YouTube player object
-        let player;
-        let isMusicPlaying = false;
-        
-        // This function is automatically called when the YouTube IFrame Player API script has loaded.
-        function onYouTubeIframeAPIReady() {
-            // Create a new YouTube player instance
-            player = new YT.Player('player', {
-                height: '0', // Set height to 0 to make the player invisible
-                width: '0',  // Set width to 0 to make the player invisible
-                videoId: 'RLYksQvr5zY', // This is the ID for a royalty-free music video.
-                playerVars: {
-                    'autoplay': 0,      // Autoplay is off to comply with browser policies
-                    'controls': 0,      // Hide player controls
-                    'disablekb': 1,     // Disable keyboard controls
-                    'loop': 0,          // Loop the video (requires playlist)
-                    'playlist': 'RLYksQvr5zY' // The loop parameter only works with a playlist.
-                },
-                events: {
-                    'onReady': onPlayerReady
-                }
-            });
-        }
-        
-        // This function is called once the player has loaded and is ready to play.
-        function onPlayerReady(event) {
-            // Set initial volume to a reasonable level
-            event.target.setVolume(50);
-            volumeSlider.value = 50;
+        // Add a listener to the speaker button
+        speakerButton.addEventListener('click', () => {
+            // Check if the audio is paused
+            if (myAudio.paused) {
+                myAudio.play();
+            } else {
+                myAudio.pause();
+            }
+        });
 
-            // Add a listener to the speaker button
-            speakerButton.addEventListener('click', () => {
-                if (isMusicPlaying) {
-                    event.target.pauseVideo();
-                } else {
-                    event.target.playVideo();
-                }
-                isMusicPlaying = !isMusicPlaying;
-            });
+        // Add a listener to the volume slider to control the volume
+        volumeSlider.addEventListener('input', (e) => {
+            // Set the audio volume based on the slider value (scaled from 0-100 to 0.0-1.0)
+            myAudio.volume = e.target.value / 100;
+        });
 
-            // Add a listener to the volume slider to control the volume
-            volumeSlider.addEventListener('input', (e) => {
-                event.target.setVolume(e.target.value);
-            });
-        }
+        // Set initial volume to 50%
+        myAudio.volume = 0.5;
+        volumeSlider.value = 50;
     </script>
 </body>
 </html>
-

@@ -39,6 +39,38 @@
             opacity: 100;
             transform: scaleY(1);
         }
+
+        /*
+          This CSS customizes the appearance of the volume slider for better visuals.
+        */
+        input[type="range"]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          height: 12px;
+          width: 12px;
+          background: #3B82F6; /* Blue-600 */
+          border-radius: 50%;
+          cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+          height: 12px;
+          width: 12px;
+          background: #3B82F6; /* Blue-600 */
+          border-radius: 50%;
+          cursor: pointer;
+        }
+
+        /* Hide the slider initially and animate its appearance */
+        .slider-wrapper {
+            opacity: 0;
+            max-height: 0;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .group:hover .slider-wrapper {
+            opacity: 1;
+            max-height: 50px;
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -49,7 +81,7 @@
             Welcome
         </h1>
         
-        <!-- Main button and music button -->
+        <!-- Main button and music control -->
         <div class="flex gap-4">
             <button id="main-button"
                     class="bg-blue-600 text-white font-bold py-3 px-8 rounded-xl
@@ -60,17 +92,28 @@
                            active:scale-95 text-center">
                 Click to Show Menu
             </button>
-            <button id="music-button"
-                    class="bg-gray-700 text-white font-bold py-3 px-8 rounded-xl
-                           shadow-lg hover:shadow-xl
-                           transition-all duration-300 transform
-                           hover:scale-110
-                           focus:outline-none focus:ring-4 focus:ring-gray-300
-                           active:scale-95 text-center">
-                Play Music ⏯️
-            </button>
-        </div>
 
+            <!-- Music control container with the group hover utility -->
+            <div class="relative group flex items-center justify-center h-12 w-12 rounded-xl">
+                <!-- Speaker icon button -->
+                <button id="speaker-button"
+                        class="bg-gray-700 text-white rounded-full p-2
+                               shadow-lg hover:shadow-xl
+                               transition-all duration-300 transform
+                               hover:scale-110
+                               focus:outline-none focus:ring-4 focus:ring-gray-300
+                               active:scale-95">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75L19.5 12m0 0l-2.25 2.25M19.5 12H12m0 0V21.75c0 .621.504 1.125 1.125 1.125h.25a1.125 1.125 0 001.125-1.125V19.5m0-16.5V4.5m-1.125 2.25a2.25 2.25 0 110 4.5m0-4.5a2.25 2.25 0 00-2.25 2.25M17.25 21.75L12 16.5m-4.75 4.75a2.25 2.25 0 01-3.182-3.182L5.25 14.25m4.5-4.5l-2.25-2.25m2.25 2.25l2.25-2.25M7.25 5.25A2.25 2.25 0 0110.432 2.068a2.25 2.25 0 013.182-3.182L14.25 5.25M21.75 14.25L16.5 9m-4.5 2.25a2.25 2.25 0 01-3.182-3.182l2.25 2.25M14.25 9L12 6.75m-4.5-2.25a2.25 2.25 0 00-2.25-2.25M12 4.5m0-1.5a2.25 2.25 0 012.25 2.25m0-4.5a2.25 2.25 0 00-2.25-2.25" />
+                    </svg>
+
+                </button>
+                <!-- Volume slider that appears on hover -->
+                <div class="absolute bottom-full mb-2 slider-wrapper">
+                    <input type="range" id="volume-slider" min="0" max="100" value="50" class="w-32 h-1 bg-gray-300 rounded-lg appearance-none cursor-pointer">
+                </div>
+            </div>
+        </div>
 
         <!-- Container for the 5 buttons, now arranged side-by-side -->
         <div id="sub-buttons-container"
@@ -84,7 +127,7 @@
                            hover:scale-110
                            focus:outline-none focus:ring-4 focus:ring-blue-300
                            active:scale-95 text-center">
-                math games
+                Math Games
             </a>
             <a href="download-app-page.html" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl
                            shadow-lg hover:shadow-xl
@@ -92,7 +135,7 @@
                            hover:scale-110
                            focus:outline-none focus:ring-4 focus:ring-blue-300
                            active:scale-95 text-center">
-                apps
+                Apps
             </a>
             <a href="music.html" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl
                            shadow-lg hover:shadow-xl
@@ -100,7 +143,7 @@
                            hover:scale-110
                            focus:outline-none focus:ring-4 focus:ring-blue-300
                            active:scale-95 text-center">
-                music
+                Music
             </a>
             <a href="embeds.html" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl
                            shadow-lg hover:shadow-xl
@@ -108,7 +151,7 @@
                            hover:scale-110
                            focus:outline-none focus:ring-4 focus:ring-blue-300
                            active:scale-95 text-center">
-                embedded content
+                Embedded Content
             </a>
             <a href="page5.html" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl
                            shadow-lg hover:shadow-xl
@@ -128,7 +171,8 @@
         // Get references to the main button and the container for the sub-buttons
         const mainButton = document.getElementById('main-button');
         const subButtonsContainer = document.getElementById('sub-buttons-container');
-        const musicButton = document.getElementById('music-button');
+        const speakerButton = document.getElementById('speaker-button');
+        const volumeSlider = document.getElementById('volume-slider');
 
         // Add a click event listener to the main button
         mainButton.addEventListener('click', () => {
@@ -164,17 +208,23 @@
         
         // This function is called once the player has loaded and is ready to play.
         function onPlayerReady(event) {
-            // Now that the player is ready, we can add a listener to the music button.
-            // The music won't play until the user clicks the button.
-            musicButton.addEventListener('click', () => {
+            // Set initial volume to a reasonable level
+            event.target.setVolume(50);
+            volumeSlider.value = 50;
+
+            // Add a listener to the speaker button
+            speakerButton.addEventListener('click', () => {
                 if (isMusicPlaying) {
                     event.target.pauseVideo();
-                    musicButton.textContent = 'Play Music ⏯️';
                 } else {
                     event.target.playVideo();
-                    musicButton.textContent = 'Pause Music ⏸️';
                 }
                 isMusicPlaying = !isMusicPlaying;
+            });
+
+            // Add a listener to the volume slider to control the volume
+            volumeSlider.addEventListener('input', (e) => {
+                event.target.setVolume(e.target.value);
             });
         }
     </script>
